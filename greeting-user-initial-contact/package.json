@@ -1,0 +1,23 @@
+{
+  "name": "gerayo-mvp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.1",
+    "express": "^4.22.1",
+    "nodemailer": "^9.0.3",
+    "pg": "^8.20.0",
+    "qrcode": "^1.5.4"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

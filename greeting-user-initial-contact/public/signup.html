@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Gerayo | Create account</title><link rel="stylesheet" href="shared.css"></head>
+<body data-page="signup"><main class="auth-layout"><section class="card"><h1 class="page-title">Create your account</h1><p class="page-intro">Join Gerayo to book your next trip.</p><form id="signup-form" novalidate>
+  <div class="field"><label for="fullname">Full name</label><input id="fullname" name="fullname" autocomplete="name" placeholder="Jean Doe" required><small class="field-error"></small></div>
+  <div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required><small class="field-error"></small></div>
+  <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="new-password" required><small class="field-error"></small></div>
+  <div class="password-rules" id="password-rules"><span data-rule="length">○ At least 8 characters</span><span data-rule="number">○ Includes a number</span></div>
+  <div class="form-actions"><button id="signup-button" type="submit">Create account</button></div></form><p class="page-intro" style="margin:20px 0 0;text-align:center">Already have an account? <a href="user-login.html">Sign in</a></p></section></main>
+<script src="shared.js"></script><script>
+const form=document.querySelector('#signup-form'); const button=document.querySelector('#signup-button');
+const validate=Gerayo.bindValidation(form,{fullname:'name',email:'email',password:'password'},button);
+document.querySelector('#password').addEventListener('input',e=>{const value=e.target.value;document.querySelector('[data-rule="length"]').classList.toggle('met',value.length>=8);document.querySelector('[data-rule="number"]').classList.toggle('met',/\d/.test(value));});
+form.addEventListener('submit',async e=>{e.preventDefault(); if(!validate()) return; Gerayo.clearFeedback(form); Gerayo.setLoading(button,true,'Creating account...'); try{const res=await fetch('/api/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fullname:form.fullname.value.trim(),email:form.email.value.trim(),password:form.password.value})});const data=await res.json();if(!res.ok) throw data;localStorage.setItem('userToken',data.token);localStorage.setItem('userName',data.userName);Gerayo.showFeedback(form,'success','✓ Account created! Taking you to trip search.');setTimeout(()=>location.href='search.html',700);}catch(data){Gerayo.showFeedback(form,'error',Gerayo.apiMessage(data,'We could not create your account.'));Object.entries(data?.error?.fields||{}).forEach(([name,msg])=>Gerayo.setFieldError(form.elements[name],msg));Gerayo.setLoading(button,false,'Create account');}});
+</script></body></html>
